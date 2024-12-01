@@ -9,8 +9,8 @@ csv_file = 'D:/GalaxyMorphology/gz_decals_auto_posteriors.csv'
 
 df = pd.read_csv(csv_file)
 
-# Фільтруємо записи, у яких 'iauname' починається на J000-J100 (перша тека)
-filtered_df = df[df['iauname'].str.startswith(tuple(f"J{str(i).zfill(3)}" for i in range(101)))]
+filtered_df = df[df['iauname'].str.startswith(
+    tuple(f"J{str(i).zfill(3)}" for i in range(101)))]
 
 if filtered_df.empty:
     print("Порожній .csv")
@@ -37,7 +37,11 @@ def process_image(image_path, output_path):
     cropped_image = gray_image.crop((left, top, right, bottom))
 
     try:
-        cropped_image.save(os.path.join(output_path, os.path.basename(image_path)), format='png')
+        cropped_image.save(
+            os.path.join(
+                output_path,
+                os.path.basename(image_path)),
+            format='png')
     except Exception as e:
         print(e)
 

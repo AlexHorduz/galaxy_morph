@@ -8,15 +8,17 @@ import plotly.express as px
 import matplotlib.pyplot as plt
 
 dataset_path = "./filtered_images"
-labels_path = os.path.join(dataset_path, "gz_decals_auto_posteriors_existing_top_400_each.csv")
+labels_path = os.path.join(
+    dataset_path,
+    "gz_decals_auto_posteriors_existing_top_400_each.csv")
 images_folder = os.path.join(dataset_path, "gz_decals_dr5_png_cropped_top_400")
 
 labels = pd.read_csv(labels_path)
 
-labels = labels[[
-    "iauname", "smooth-or-featured_smooth_fraction",
-    "smooth-or-featured_featured-or-disk_fraction", "smooth-or-featured_artifact_fraction"
-]]
+labels = labels[["iauname",
+                 "smooth-or-featured_smooth_fraction",
+                 "smooth-or-featured_featured-or-disk_fraction",
+                 "smooth-or-featured_artifact_fraction"]]
 
 labels.columns = ["iauname", "smooth", "featured", "artifact"]
 
@@ -80,8 +82,10 @@ plt.grid()
 plt.savefig("./variance.png")
 
 threshold = 0.9
-n_components_optimal = np.argmax(cumulative_explained_variance >= threshold) + 1
-print(f"Number of components needed to explain {threshold * 100}% of variance: {n_components_optimal}")
+n_components_optimal = np.argmax(
+    cumulative_explained_variance >= threshold) + 1
+print(
+    f"Number of components needed to explain {threshold * 100}% of variance: {n_components_optimal}")
 
 loading_scores = pca.components_.T
 
