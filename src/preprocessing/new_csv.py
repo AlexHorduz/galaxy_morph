@@ -7,7 +7,8 @@ output_csv = 'D:/GalaxyMorphology/gz_decals_auto_posteriors_cropped.csv'
 
 df = pd.read_csv(original_csv)
 
-processed_images = {os.path.splitext(f)[0] for f in os.listdir(processed_images_dir) if f.endswith('.png')}
+processed_images = {os.path.splitext(f)[0] for f in os.listdir(
+    processed_images_dir) if f.endswith('.png')}
 
 filtered_df = df[df['iauname'].isin(processed_images)]
 
