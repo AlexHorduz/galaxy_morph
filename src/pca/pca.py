@@ -85,7 +85,9 @@ threshold = 0.9
 n_components_optimal = np.argmax(
     cumulative_explained_variance >= threshold) + 1
 print(
-    f"Number of components needed to explain {threshold * 100}% of variance: {n_components_optimal}")
+    f"Number of components needed to explain {
+        threshold *
+        100}% of variance: {n_components_optimal}")
 
 loading_scores = pca.components_.T
 

@@ -9,11 +9,8 @@ os.makedirs(output_folder_denoised, exist_ok=True)
 os.makedirs(output_folder_canny, exist_ok=True)
 
 
-def canny_edges_image(
-        in_path,
-        out_path_denoised,
-        out_path_canny,
-        use_denoiser=True):
+def canny_edges_image(in_path, out_path_denoised,
+                      out_path_canny, use_denoiser=True):
     image = cv2.imread(in_path, cv2.IMREAD_GRAYSCALE)
     if use_denoiser:
         image = cv2.bilateralFilter(image, d=9, sigmaColor=100, sigmaSpace=75)
