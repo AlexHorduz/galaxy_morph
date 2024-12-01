@@ -11,7 +11,6 @@ dataset_path = "./filtered_images"
 labels_path = os.path.join(dataset_path, "gz_decals_auto_posteriors_existing_top_400_each.csv")
 images_folder = os.path.join(dataset_path, "gz_decals_dr5_png_cropped_top_400")
 
-# extract and process labels
 labels = pd.read_csv(labels_path)
 
 labels = labels[[
@@ -26,7 +25,6 @@ labels["label"] = labels.values[:, 1:].argmax(axis=1)
 print(labels.head())
 print(labels["label"].value_counts())
 
-# take 400 images from each class
 # sampled_labels = pd.DataFrame()
 # num_img_for_class = 400
 # for label in [0, 1, 2]:
@@ -40,7 +38,6 @@ print(labels["label"].value_counts())
 # print("Sampled label distribution:")
 # print(sampled_labels["label"].value_counts())
 
-# extract and process images
 images = []
 i = 1
 for filename in labels["iauname"].values:
@@ -55,9 +52,7 @@ for filename in labels["iauname"].values:
 images = np.array(images)
 print(images.shape)
 
-
-# apply pca to images
-images_flat = images.reshape(images.shape[0], -1)  # should be same as height * width
+images_flat = images.reshape(images.shape[0], -1)
 print(f"Flattened images shape: {images_flat.shape}")
 
 scaler = StandardScaler()
@@ -67,7 +62,6 @@ pca = PCA()
 images_pca = pca.fit_transform(images_flat_scaled)
 print(f"PCA applied. Reduced dimensions: {images_pca.shape}")
 
-# analyze variance
 explained_variance = pca.explained_variance_ratio_
 print(f"Explained variance ratio: {explained_variance}")
 print(f"Total explained variance: {np.sum(explained_variance)}")
@@ -89,7 +83,6 @@ threshold = 0.9
 n_components_optimal = np.argmax(cumulative_explained_variance >= threshold) + 1
 print(f"Number of components needed to explain {threshold * 100}% of variance: {n_components_optimal}")
 
-# the most important features of the first component
 loading_scores = pca.components_.T
 
 pc1_loadings = np.abs(loading_scores[:, 0])
@@ -109,7 +102,6 @@ plt.xlabel("Feature Index")
 plt.ylabel("Absolute Loading Score")
 plt.savefig("feature_contribution_pc1.png")
 
-# plot pca
 fig = px.scatter_3d(
     x=images_pca[:, 0], y=images_pca[:, 1], z=images_pca[:, 2],
     color=labels["label"].astype(str),
