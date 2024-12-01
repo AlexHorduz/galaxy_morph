@@ -52,7 +52,6 @@ for filename in labels["iauname"].values:
 images = np.array(images)
 print(images.shape)
 
-
 images_flat = images.reshape(images.shape[0], -1)
 print(f"Flattened images shape: {images_flat.shape}")
 
