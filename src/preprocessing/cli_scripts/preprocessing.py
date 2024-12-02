@@ -3,7 +3,9 @@ import argparse
 from PIL import Image
 import cv2
 
-def crop_image(image_path: str, output_path: str, crop_factor: float = 0.2) -> None:
+
+def crop_image(image_path: str, output_path: str,
+               crop_factor: float = 0.2) -> None:
     """
     Opens an image, converts it to grayscale, crops it based on the crop factor, and saves the result.
 
@@ -30,6 +32,7 @@ def crop_image(image_path: str, output_path: str, crop_factor: float = 0.2) -> N
 
     cropped_image.save(output_path)
 
+
 def canny_edges_image(
     in_path: str,
     out_path_denoised: str,
@@ -49,7 +52,8 @@ def canny_edges_image(
 
     if use_denoiser:
         image = cv2.bilateralFilter(image, d=9, sigmaColor=100, sigmaSpace=75)
-        image = cv2.fastNlMeansDenoising(image, h=12, templateWindowSize=7, searchWindowSize=21)
+        image = cv2.fastNlMeansDenoising(
+            image, h=12, templateWindowSize=7, searchWindowSize=21)
         cv2.imwrite(out_path_denoised, image)
 
     max_val = 150
@@ -58,6 +62,7 @@ def canny_edges_image(
     canny = cv2.Canny(image, min_val, max_val, apertureSize=5)
 
     cv2.imwrite(out_path_canny, canny)
+
 
 def process_images(
     input_folder: str,
@@ -78,27 +83,51 @@ def process_images(
     for filename in os.listdir(input_folder):
         image_path = os.path.join(input_folder, filename)
 
-        if os.path.isfile(image_path) and filename.lower().endswith(('jpg', 'jpeg', 'png')):
+        if os.path.isfile(image_path) and filename.lower().endswith(
+                ('jpg', 'jpeg', 'png')):
             output_path = os.path.join(output_folder, filename)
 
             try:
                 if mode == 'canny':
-                    output_denoised = os.path.join(output_folder, f"denoised_{filename}")
-                    output_canny = os.path.join(output_folder, f"canny_{filename}")
-                    canny_edges_image(image_path, output_denoised, output_canny)
+                    output_denoised = os.path.join(
+                        output_folder, f"denoised_{filename}")
+                    output_canny = os.path.join(
+                        output_folder, f"canny_{filename}")
+                    canny_edges_image(
+                        image_path, output_denoised, output_canny)
                 elif mode == 'crop':
-                    crop_image(image_path, output_path, crop_factor=crop_factor)
+                    crop_image(
+                        image_path,
+                        output_path,
+                        crop_factor=crop_factor)
                 print(f"Processed: {filename}")
             except Exception as e:
                 print(f"Error processing {filename}: {e}")
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Process images using Canny edge detection or cropping.")
-    parser.add_argument("input_folder", type=str, help="Path to the input folder containing images.")
-    parser.add_argument("output_folder", type=str, help="Path to the output folder to save processed images.")
-    parser.add_argument("mode", type=str, choices=["canny", "crop"], help="Processing mode: 'canny' or 'crop'.")
-    parser.add_argument("--crop_factor", type=float, default=0.2, help="Crop factor for cropping mode (default: 0.2).")
+    parser = argparse.ArgumentParser(
+        description="Process images using Canny edge detection or cropping.")
+    parser.add_argument(
+        "input_folder",
+        type=str,
+        help="Path to the input folder containing images.")
+    parser.add_argument(
+        "output_folder",
+        type=str,
+        help="Path to the output folder to save processed images.")
+    parser.add_argument(
+        "mode",
+        type=str,
+        choices=[
+            "canny",
+            "crop"],
+        help="Processing mode: 'canny' or 'crop'.")
+    parser.add_argument(
+        "--crop_factor",
+        type=float,
+        default=0.2,
+        help="Crop factor for cropping mode (default: 0.2).")
 
     args = parser.parse_args()
 
